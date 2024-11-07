@@ -1,0 +1,109 @@
+import java.util.Scanner;
+
+interface ShippingCostCalculatorStrategy {
+    double computeCost(double weight, double distance);
+}
+
+class StandardDelivery implements ShippingCostCalculatorStrategy {
+    @Override
+    public double computeCost(double weight, double distance) {
+        return weight * 0.4 + distance * 0.05; // Өзгертілген коэффициенттер
+    }
+}
+
+class ExpressDelivery implements ShippingCostCalculatorStrategy {
+    @Override
+    public double computeCost(double weight, double distance) {
+        return (weight * 0.85 + distance * 0.15) + 12; // Өзгертілген коэффициенттер мен қосымша ақы
+    }
+}
+
+class InternationalDelivery implements ShippingCostCalculatorStrategy {
+    @Override
+    public double computeCost(double weight, double distance) {
+        return weight * 1.2 + distance * 0.75 + 20; // Өзгертілген коэффициенттер
+    }
+}
+
+// Түнгі жеткізілім стратегиясы
+class NightDelivery implements ShippingCostCalculatorStrategy {
+    private static final double NIGHT_FEE = 25.0; // Түнгі жеткізілім үшін қосымша ақы
+
+    @Override
+    public double computeCost(double weight, double distance) {
+        return (weight * 0.6 + distance * 0.1) + NIGHT_FEE; // Өзгертілген коэффициенттер
+    }
+}
+
+
+class DeliveryCostContext {
+    private ShippingCostCalculatorStrategy strategy;
+
+    public void setStrategy(ShippingCostCalculatorStrategy strategy) {
+        this.strategy = strategy;
+    }
+
+    public double calculate(double weight, double distance) {
+        if (strategy == null) {
+            throw new IllegalStateException("Жеткізілім стратегиясы таңдалмаған.");
+        }
+        return strategy.computeCost(weight, distance);
+    }
+}
+
+public class DeliveryCostCalculator {
+    public static void main(String[] args) {
+        DeliveryCostContext deliveryContext = new DeliveryCostContext();
+        Scanner input = new Scanner(System.in);
+
+        System.out.println("Жеткізілім түрін таңдаңыз: 1 - Стандартты, 2 - Экспресс, 3 - Халықаралық, 4 - Түнгі");
+        String selection = input.nextLine();
+
+        switch (selection) {
+            case "1":
+                deliveryContext.setStrategy(new StandardDelivery());
+                break;
+            case "2":
+                deliveryContext.setStrategy(new ExpressDelivery());
+                break;
+            case "3":
+                deliveryContext.setStrategy(new InternationalDelivery());
+                break;
+            case "4":
+                deliveryContext.setStrategy(new NightDelivery());
+                break;
+            default:
+                System.out.println("Дұрыс емес таңдау.");
+                return;
+        }
+
+        System.out.println("Пакеттің салмағын (кг) енгізіңіз:");
+        double weight = input.nextDouble();
+        if (weight <= 0) {
+            System.out.println("Салмақ оң болуы тиіс.");
+            return;
+        }
+
+        System.out.println("Жеткізілім қашықтығын (км) енгізіңіз:");
+        double distance = input.nextDouble();
+        if (distance <= 0) {
+            System.out.println("Қашықтық оң болуы тиіс.");
+            return;
+        }
+
+        double totalCost = deliveryContext.calculate(weight, distance);
+        System.out.printf("Жеткізілім құны: %.2f%n", totalCost);
+
+        input.close();
+    }
+}
+
+Жеткізілім түрін таңдаңыз: 1 - Стандартты, 2 - Экспресс, 3 - Халықаралық, 4 - Түнгі
+1
+Пакеттің салмағын (кг) енгізіңіз:
+10
+Жеткізілім қашықтығын (км) енгізіңіз:
+6.5
+Жеткізілім құны: 4.33
+
+

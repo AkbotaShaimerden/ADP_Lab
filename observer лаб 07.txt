@@ -1,0 +1,191 @@
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+interface CostCalculationStrategy {
+    double computeShippingCost(double weight, double distance);
+}
+
+class RegularShipping implements CostCalculationStrategy {
+    @Override
+    public double computeShippingCost(double weight, double distance) {
+        return weight * distance * 0.45; 
+    }
+}
+
+
+class QuickShipping implements CostCalculationStrategy {
+    @Override
+    public double computeShippingCost(double weight, double distance) {
+        return weight * distance * 0.75 + 12; // Өзгертілген коэффициент және қосымша ақы
+    }
+}
+
+class GlobalShipping implements CostCalculationStrategy {
+    @Override
+    public double computeShippingCost(double weight, double distance) {
+        double additionalFee = 60; 
+        return weight * distance * 0.65 + additionalFee; 
+    }
+}
+
+class NightDelivery implements CostCalculationStrategy {
+    @Override
+    public double computeShippingCost(double weight, double distance) {
+        return weight * distance * 0.55 + 25; 
+    }
+}
+
+// Жеткізілім контексті
+class ShippingContext {
+    private CostCalculationStrategy shippingStrategy;
+
+    public ShippingContext(CostCalculationStrategy strategy) {
+        this.shippingStrategy = strategy;
+    }
+
+    public void changeStrategy(CostCalculationStrategy strategy) {
+        this.shippingStrategy = strategy;
+    }
+
+    public double calculate(double weight, double distance) {
+        if (weight < 0 || distance < 0) {
+            throw new IllegalArgumentException("Вес и расстояние должны быть положительными.");
+        }
+        return shippingStrategy.computeShippingCost(weight, distance);
+    }
+}
+
+interface WeatherObserver {
+    void updateTemperature(double temperature);
+}
+
+interface WeatherSubject {
+    void addObserver(WeatherObserver observer);
+    void removeObserver(WeatherObserver observer);
+    void notifyAllObservers();
+}
+
+class WeatherMonitoringStation implements WeatherSubject {
+    private List<WeatherObserver> observers = new ArrayList<>();
+    private double temperature;
+
+    @Override
+    public void addObserver(WeatherObserver observer) {
+        observers.add(observer);
+    }
+
+    @Override
+    public void removeObserver(WeatherObserver observer) {
+        observers.remove(observer);
+    }
+
+    @Override
+    public void notifyAllObservers() {
+        for (WeatherObserver observer : observers) {
+            observer.updateTemperature(temperature);
+        }
+    }
+
+    public void setTemperature(double temperature) {
+        this.temperature = temperature;
+        notifyAllObservers();
+    }
+}
+
+class TemperatureDisplay implements WeatherObserver {
+    private String displayName;
+
+    public TemperatureDisplay(String name) {
+        this.displayName = name;
+    }
+
+    @Override
+    public void updateTemperature(double temperature) {
+        System.out.println(displayName + " получил обновление: температура = " + temperature + "°C");
+    }
+}
+
+class EmailNotification implements WeatherObserver {
+    private String emailAddress;
+
+    public EmailNotification(String email) {
+        this.emailAddress = email;
+    }
+
+    @Override
+    public void updateTemperature(double temperature) {
+        System.out.println("Отправка уведомления на " + emailAddress + ": текущая температура " + temperature + "°C");
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Выберите тип доставки: 1 - Стандартная, 2 - Экспресс, 3 - Международная, 4 - Ночная");
+        int deliveryChoice = scanner.nextInt();
+
+        CostCalculationStrategy shippingStrategy;
+        switch (deliveryChoice) {
+            case 1:
+                shippingStrategy = new RegularShipping();
+                break;
+            case 2:
+                shippingStrategy = new QuickShipping();
+                break;
+            case 3:
+                shippingStrategy = new GlobalShipping();
+                break;
+            case 4:
+                shippingStrategy = new NightDelivery();
+                break;
+            default:
+                throw new IllegalArgumentException("Некорректный выбор доставки.");
+        }
+
+        System.out.println("Введите вес товара (кг):");
+        double weight = scanner.nextDouble();
+        System.out.println("Введите расстояние доставки (км):");
+        double distance = scanner.nextDouble();
+
+        ShippingContext context = new ShippingContext(shippingStrategy);
+        double totalCost = context.calculate(weight, distance);
+        System.out.println("Общая стоимость доставки: " + totalCost);
+
+        WeatherMonitoringStation weatherStation = new WeatherMonitoringStation();
+
+        TemperatureDisplay display1 = new TemperatureDisplay("Дисплей 1");
+        TemperatureDisplay display2 = new TemperatureDisplay("Дисплей 2");
+        EmailNotification emailNotification = new EmailNotification("alert@weather.com");
+
+        weatherStation.addObserver(display1);
+        weatherStation.addObserver(display2);
+        weatherStation.addObserver(emailNotification);
+
+        weatherStation.setTemperature(22.5);
+        System.out.println("---");
+        weatherStation.removeObserver(display2);
+
+        weatherStation.setTemperature(28.0);
+    }
+
+}
+
+
+
+Выберите тип доставки: 1 - Стандартная, 2 - Экспресс, 3 - Международная, 4 - Ночная
+2
+Введите вес товара (кг):
+2.5
+Введите расстояние доставки (км):
+5
+Общая стоимость доставки: 21.375
+Дисплей 1 получил обновление: температура = 22.5°C
+Дисплей 2 получил обновление: температура = 22.5°C
+Отправка уведомления на alert@weather.com: текущая температура 22.5°C
+---
+Дисплей 1 получил обновление: температура = 28.0°C
+Отправка уведомления на alert@weather.com: текущая температура 28.0°C
+
+

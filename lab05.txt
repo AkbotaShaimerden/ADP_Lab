@@ -1,0 +1,136 @@
+import java.util.Scanner;
+
+interface Transport {
+    void move();
+    void fuelUp();
+}
+
+class Car implements Transport {
+    private String model;
+    private int speed;
+
+    public Car(String model, int speed) {
+        this.model = model;
+        this.speed = speed;
+    }
+
+    public void move() {
+        System.out.println("Машина " + model + " движется со скоростью " + speed + " km/h.");
+    }
+
+    public void fuelUp() {
+        System.out.println("Заправка автомобиля.");
+    }
+}
+
+class Motorcycle implements Transport {
+    private String model;
+    private int speed;
+
+    public Motorcycle(String model, int speed) {
+        this.model = model;
+        this.speed = speed;
+    }
+
+    public void move() {
+        System.out.println("Мотоцикл " + model + " движется со скоростью " + speed + " km/h.");
+    }
+
+    public void fuelUp() {
+        System.out.println("Заправка мотоцикла.");
+    }
+}
+
+class Plane implements Transport {
+    private String model;
+    private int speed;
+
+    public Plane(String model, int speed) {
+        this.model = model;
+        this.speed = speed;
+    }
+
+    public void move() {
+        System.out.println("Самолет " + model + " летит на скорости " + speed + " km/h.");
+    }
+
+    public void fuelUp() {
+        System.out.println("Заправка самолета.");
+    }
+}
+
+class Bicycle implements Transport {
+    private String model;
+    private int speed;
+
+    public Bicycle(String model, int speed) {
+        this.model = model;
+        this.speed = speed;
+    }
+
+    public void move() {
+        System.out.println("Велосипед " + model + " движется со скоростью " + speed + " km/h.");
+    }
+
+    public void fuelUp() {
+        System.out.println("Велосипедам не нужно топливо.");
+    }
+}
+
+abstract class TransportFactory {
+    public abstract Transport createTransport(String model, int speed);
+}
+
+class CarFactory extends TransportFactory {
+    public Transport createTransport(String model, int speed) {
+        return new Car(model, speed);
+    }
+}
+
+class MotorcycleFactory extends TransportFactory {
+    public Transport createTransport(String model, int speed) {
+        return new Motorcycle(model, speed);
+    }
+}
+
+class PlaneFactory extends TransportFactory {
+    public Transport createTransport(String model, int speed) {
+        return new Plane(model, speed);
+    }
+}
+
+class BicycleFactory extends TransportFactory {
+    public Transport createTransport(String model, int speed) {
+        return new Bicycle(model, speed);
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Выберите тип транспорта: 1 – Автомобиль, 2 – Мотоцикл, 3 – Самолет, 4 – Велосипед.");
+        int choice = scanner.nextInt();
+        System.out.println("Введите модель:");
+        String model = scanner.next();
+        System.out.println("Введите скорость:");
+        int speed = scanner.nextInt();
+
+        TransportFactory factory = null;
+
+        switch (choice) {
+            case 1 -> factory = new CarFactory();
+            case 2 -> factory = new MotorcycleFactory();
+            case 3 -> factory = new PlaneFactory();
+            case 4 -> factory = new BicycleFactory();
+            default -> System.out.println("");
+        }
+
+        if (factory != null) {
+            Transport transport = factory.createTransport(model, speed);
+            transport.move();
+            transport.fuelUp();
+        }
+    }
+}
+

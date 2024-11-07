@@ -1,0 +1,69 @@
+public class Main {
+    public static void main(String[] args) {
+      
+        Worker worker = new Worker("Жазира", 1, 500, 40);
+        Manager manager = new Manager("Бота", 2, 70000, 10000);
+
+        System.out.println(worker.getName() + " зарплата: " + worker.calculateSalary() + " тыс.");
+        System.out.println(manager.getName() + " зарплата: " + manager.calculateSalary() + " тыс.");
+    }
+}
+
+class Employee {
+    private String name;
+    private int id;
+
+    public Employee(String name, int id) {
+        this.name = name;
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public double calculateSalary() {
+        return 0.0; // Метод будет переопределен
+    }
+}
+
+class Worker extends Employee {
+    private double hourlyRate;
+    private int hoursWorked;
+
+    public Worker(String name, int id, double hourlyRate, int hoursWorked) {
+        super(name, id);
+        this.hourlyRate = hourlyRate;
+        this.hoursWorked = hoursWorked;
+    }
+
+    @Override
+    public double calculateSalary() {
+        return hourlyRate * hoursWorked;
+    }
+}
+
+class Manager extends Employee {
+    private double baseSalary;
+    private double bonus;
+
+    public Manager(String name, int id, double baseSalary, double bonus) {
+        super(name, id);
+        this.baseSalary = baseSalary;
+        this.bonus = bonus;
+    }
+
+    @Override
+    public double calculateSalary() {
+        return baseSalary + bonus;
+    }
+}
+
+
+
+
+Жазира зарплата: 20000.0 тыс.
+Бота зарплата: 80000.0 тыс.
+
+
+** Process exited - Return Code: 0 **
