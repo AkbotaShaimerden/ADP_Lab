@@ -1,4 +1,4 @@
-package модуль9;
+package модуль9.prac;
 public class ReportTest {
     public static void main(String[] args) {
         IReport report = new SalesReport();

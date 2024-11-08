@@ -1,4 +1,4 @@
-package модуль9;
+package модуль9.prac;
 
 public interface IReport {
     String generate();

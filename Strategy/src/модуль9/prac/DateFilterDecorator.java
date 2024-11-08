@@ -1,4 +1,4 @@
-package модуль9;
+package модуль9.prac;
 
 public class DateFilterDecorator extends ReportDecorator {
     private String startDate;

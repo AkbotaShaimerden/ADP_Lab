@@ -1,4 +1,4 @@
-package модуль9;
+package модуль9.prac;
 
 abstract class ReportDecorator implements IReport {
     protected IReport report;
