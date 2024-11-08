@@ -1,4 +1,4 @@
-package Adapter;
+package Adapter.prac;
 
 public class ExternalLogisticsServiceA {
     public void shipItem(int itemId) {

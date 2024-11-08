@@ -1,4 +1,4 @@
-package Adapter;
+package Adapter.prac;
 
 public class LogisticsAdapterA implements IInternalDeliveryService {
     private ExternalLogisticsServiceA externalService;

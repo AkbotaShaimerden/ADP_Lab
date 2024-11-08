@@ -1,4 +1,4 @@
-package Adapter;
+package Adapter.prac;
 
 public class DeliveryServiceFactory {
     public static IInternalDeliveryService getDeliveryService(String serviceType) {

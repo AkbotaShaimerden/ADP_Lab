@@ -1,4 +1,4 @@
-package Adapter;
+package Adapter.prac;
 
 public interface IInternalDeliveryService {
     void deliverOrder(String orderId);

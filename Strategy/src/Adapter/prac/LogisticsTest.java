@@ -1,4 +1,4 @@
-package Adapter;
+package Adapter.prac;
 
 public class LogisticsTest {
     public static void main(String[] args) {
