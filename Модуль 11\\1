@@ -1,0 +1,133 @@
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+class Book {
+    private String title;
+    private String author;
+    private String isbn;
+    private boolean isAvailable;
+
+    public Book(String title, String author, String isbn) {
+        this.title = title;
+        this.author = author;
+        this.isbn = isbn;
+        this.isAvailable = true;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public boolean isAvailable() {
+        return isAvailable;
+    }
+
+    public void markAsLoaned() {
+        isAvailable = false;
+    }
+
+    public void markAsAvailable() {
+        isAvailable = true;
+    }
+
+    @Override
+    public String toString() {
+        return title + " от " + author + " (ISBN: " + isbn + ")";
+    }
+}
+
+class Reader {
+    private int id;
+    private String name;
+    private String email;
+
+    public Reader(int id, String name, String email) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public String toString() {
+        return "Читатель: " + name + " (Электронная почта: " + email + ")";
+    }
+}
+
+class Loan {
+    private Book book;
+    private Reader reader;
+    private Date loanDate;
+    private Date returnDate;
+
+    public Loan(Book book, Reader reader) {
+        this.book = book;
+        this.reader = reader;
+        this.loanDate = new Date();
+        this.returnDate = null;
+    }
+
+    public void completeLoan() {
+        this.returnDate = new Date();
+        book.markAsAvailable();
+    }
+
+    @Override
+    public String toString() {
+        return "Выдача: " + book.getTitle() + " для " + reader.getName() + " на " + loanDate
+                + (returnDate != null ? ", возвращена " + returnDate : ", пока не возвращена");
+    }
+}
+
+class Librarian {
+    private List<Book> books = new ArrayList<>();
+    private List<Loan> loans = new ArrayList<>();
+
+    public void addBook(Book book) {
+        books.add(book);
+    }
+
+    public void removeBook(Book book) {
+        books.remove(book);
+    }
+
+    public void issueLoan(Book book, Reader reader) {
+        if (book.isAvailable()) {
+            Loan loan = new Loan(book, reader);
+            loans.add(loan);
+            book.markAsLoaned();
+        }
+    }
+
+    public void listAvailableBooks() {
+        System.out.println("Доступные книги:");
+        for (Book book : books) {
+            if (book.isAvailable()) {
+                System.out.println(book);
+            }
+        }
+    }
+}
+
+public class LibraryManagement {
+    public static void main(String[] args) {
+        Librarian librarian = new Librarian();
+
+        Book book1 = new Book("Война и мир", "Лев Толстой", "123456");
+        Book book2 = new Book("Преступление и наказание", "Федор Достоевский", "654321");
+
+        librarian.addBook(book1);
+        librarian.addBook(book2);
+
+        Reader reader = new Reader(1, "Иван Иванов", "ivan@example.com");
+
+        librarian.issueLoan(book1, reader);
+
+        librarian.listAvailableBooks();
+    }
+}
